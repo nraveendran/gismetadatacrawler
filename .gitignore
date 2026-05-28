@@ -1,0 +1,5 @@
+.gradle/
+.gradle-test/
+build/
+.vscode/
+bin/

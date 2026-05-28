@@ -1,0 +1,84 @@
+plugins {
+    id "java"
+    id "org.springframework.boot" version "3.3.4"
+    id "io.spring.dependency-management" version "1.1.6"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-jdbc"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "org.postgresql:postgresql"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+}
+
+tasks.named("test") {
+    useJUnitPlatform()
+}
+
+tasks.register("crawlArcGis", JavaExec) {
+    group = "application"
+    description = "Runs the ArcGIS root crawler once."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.arcgis.crawler.ArcGisCatalogCrawlerCli"
+}
+
+tasks.register("crawlFeatureServerLayers", JavaExec) {
+    group = "application"
+    description = "Fetches FeatureServer metadata and stores layer rows."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.arcgis.crawler.FeatureServerLayerCrawlerCli"
+}
+
+tasks.register("crawlLayerDetails", JavaExec) {
+    group = "application"
+    description = "Fetches layer metadata and stores field rows."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.arcgis.crawler.LayerDetailCrawlerCli"
+}
+
+tasks.register("embedSemanticRoles", JavaExec) {
+    group = "application"
+    description = "Backfills OpenAI embeddings for semantic_roles rows."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.embedding.roles.SemanticRoleEmbeddingBackfillCli"
+}
+
+tasks.register("embedLayerSemanticRoles", JavaExec) {
+    group = "application"
+    description = "Backfills OpenAI embeddings for layer_semantic_roles rows."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.embedding.roles.LayerSemanticRoleEmbeddingBackfillCli"
+}
+
+tasks.register("embedArcGisFields", JavaExec) {
+    group = "application"
+    description = "Backfills OpenAI embeddings for arcgis_fields rows."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.embedding.fields.FieldEmbeddingBackfillCli"
+}
+
+tasks.register("embedArcGisLayers", JavaExec) {
+    group = "application"
+    description = "Backfills OpenAI embeddings for arcgis_layers rows."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.embedding.layers.LayerEmbeddingBackfillCli"
+}
+
+tasks.register("mapArcGisFieldSemantics", JavaExec) {
+    group = "application"
+    description = "Stores top semantic role candidates for ArcGIS fields and applies confident mappings."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.semantic.FieldSemanticMappingBackfillCli"
+}
+
+tasks.register("mapArcGisLayerSemantics", JavaExec) {
+    group = "application"
+    description = "Stores top semantic role candidates for ArcGIS layers and applies confident mappings."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.semantic.LayerSemanticMappingBackfillCli"
+}
