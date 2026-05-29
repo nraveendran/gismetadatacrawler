@@ -84,3 +84,18 @@ CREATE TABLE IF NOT EXISTS semantic_field_dictionary (
     reviewed BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+
+CREATE TABLE IF NOT EXISTS service_jurisdiction_matches (
+    id BIGSERIAL PRIMARY KEY,
+    service_id BIGINT NOT NULL REFERENCES arcgis_services(id),
+    jurisdiction_type TEXT NOT NULL, -- city | county
+    jurisdiction_id BIGINT NOT NULL,
+    relationship_type TEXT NOT NULL, -- owner | coverage | mentioned | inferred
+    match_method TEXT NOT NULL,
+    confidence NUMERIC NOT NULL,
+    evidence JSONB DEFAULT '{}'::jsonb,
+    is_primary BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (service_id, jurisdiction_type, jurisdiction_id, relationship_type, match_method)
+);

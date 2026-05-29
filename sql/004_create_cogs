@@ -1,0 +1,37 @@
+CREATE TABLE texas_cogs (
+    id BIGSERIAL PRIMARY KEY,
+    cog_name TEXT NOT NULL,
+    cog_abbreviation TEXT NOT NULL UNIQUE,
+    website TEXT,
+    region_number INTEGER,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+INSERT INTO texas_cogs
+(cog_name, cog_abbreviation, website, region_number)
+VALUES
+('Alamo Area Council of Governments', 'AACOG', 'https://www.aacog.com', 18),
+('Ark-Tex Area Council of Governments', 'ATCOG', 'https://www.atcog.org', 5),
+('Brazos Valley Council of Governments', 'BVCOG', 'https://www.bvcog.org', 13),
+('Capital Area Council of Governments', 'CAPCOG', 'https://www.capcog.org', 12),
+('Central Texas Council of Governments', 'CTCOG', 'https://www.ctcog.org', 23),
+('Coastal Bend Council of Governments', 'CBCOG', 'https://coastalbendcog.org', 20),
+('Concho Valley Council of Governments', 'CVCOG', 'https://www.cvcog.org', 10),
+('Deep East Texas Council of Governments', 'DETCOG', 'https://www.detcog.gov', 14),
+('East Texas Council of Governments', 'ETCOG', 'https://www.etcog.org', 6),
+('Golden Crescent Regional Planning Commission', 'GCRPC', 'https://www.gcrpc.org', 17),
+('Heart of Texas Council of Governments', 'HOTCOG', 'https://www.hotcog.org', 11),
+('Houston-Galveston Area Council', 'H-GAC', 'https://www.h-gac.com', 16),
+('Lower Rio Grande Valley Development Council', 'LRGVDC', 'https://www.lrgvdc.org', 21),
+('Middle Rio Grande Development Council', 'MRGDC', 'https://www.mrgdc.org', 24),
+('Nortex Regional Planning Commission', 'NORTEX', 'https://www.nortexrpc.org', 3),
+('North Central Texas Council of Governments', 'NCTCOG', 'https://www.nctcog.org', 4),
+('Panhandle Regional Planning Commission', 'PRPC', 'https://www.theprpc.org', 1),
+('Permian Basin Regional Planning Commission', 'PBRPC', 'https://www.pbrpc.org', 9),
+('Rio Grande Council of Governments', 'RGCOG', 'https://www.riocog.org', 8),
+('South East Texas Regional Planning Commission', 'SETRPC', 'https://www.setrpc.org', 15),
+('South Plains Association of Governments', 'SPAG', 'https://www.spag.org', 2),
+('South Texas Development Council', 'STDC', 'https://stdc.cog.tx.us', 19),
+('Texoma Council of Governments', 'TEXOMA', 'https://www.tcog.com', 22),
+('West Central Texas Council of Governments', 'WCTCOG', 'https://www.wctcog.org', 7)
+ON CONFLICT (cog_abbreviation) DO NOTHING;

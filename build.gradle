@@ -82,3 +82,25 @@ tasks.register("mapArcGisLayerSemantics", JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "org.example.gismetadata.semantic.LayerSemanticMappingBackfillCli"
 }
+
+tasks.register("loadUsCounties", JavaExec) {
+    group = "application"
+    description = "Loads the US counties shapefile into Postgres/PostGIS."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.spatial.CountyShapefileLoaderCli"
+}
+
+tasks.register("loadUsPlaces", JavaExec) {
+    group = "application"
+    description = "Loads the Texas places shapefile into Postgres/PostGIS."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.spatial.CountyShapefileLoaderCli"
+    args "/Users/nidhishnair/Documents/spatial/tl_2025_48_place/tl_2025_48_place.shp", "us_places"
+}
+
+tasks.register("matchServiceJurisdictions", JavaExec) {
+    group = "application"
+    description = "Matches ArcGIS services to city/county jurisdictions by service and folder names."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.jurisdiction.ServiceJurisdictionMatcherCli"
+}
