@@ -12,6 +12,8 @@ java {
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-jdbc"
     implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.google.genai:google-genai:1.3.0"
+    implementation "org.neo4j.driver:neo4j-java-driver:5.26.0"
     implementation "org.postgresql:postgresql"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
@@ -98,9 +100,45 @@ tasks.register("loadUsPlaces", JavaExec) {
     args "/Users/nidhishnair/Documents/spatial/tl_2025_48_place/tl_2025_48_place.shp", "us_places"
 }
 
+tasks.register("loadUsCogs", JavaExec) {
+    group = "application"
+    description = "Loads the Texas COGs shapefile into Postgres/PostGIS."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.spatial.CountyShapefileLoaderCli"
+    args "/Users/nidhishnair/Documents/spatial/Texas_Councils_of_Governments/Council_of_Governments.shp", "us_cogs"
+}
+
 tasks.register("matchServiceJurisdictions", JavaExec) {
     group = "application"
     description = "Matches ArcGIS services to city/county jurisdictions by service and folder names."
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "org.example.gismetadata.jurisdiction.ServiceJurisdictionMatcherCli"
+}
+
+tasks.register("buildCountyCityRelationships", JavaExec) {
+    group = "application"
+    description = "Builds county-city spatial relationships using PostGIS intersections."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.spatial.CountyCityRelationshipBuilderCli"
+}
+
+tasks.register("exportNeo4jGraph", JavaExec) {
+    group = "application"
+    description = "Exports GIS metadata and jurisdiction relationships from Postgres into Neo4j."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.graph.Neo4jGraphExportCli"
+}
+
+tasks.register("discoverGisEndpoints", JavaExec) {
+    group = "application"
+    description = "Uses OpenAI web search to discover GIS endpoint candidates for Texas counties."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.gisdiscovery.GisEndpointDiscoveryCli"
+}
+
+tasks.register("collectRawGisSearchResults", JavaExec) {
+    group = "application"
+    description = "Uses Vertex AI Google Search to collect raw GIS search results for Texas counties."
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "org.example.gismetadata.gisdiscovery.GisRawSearchCli"
 }

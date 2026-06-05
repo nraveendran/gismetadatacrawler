@@ -1,0 +1,7 @@
+graph inventory
+
+MATCH (n)
+RETURN labels(n) AS labels, count(n) AS count
+ORDER BY count DESC;
+
+

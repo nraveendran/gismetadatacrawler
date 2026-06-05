@@ -99,3 +99,22 @@ CREATE TABLE IF NOT EXISTS service_jurisdiction_matches (
     created_at TIMESTAMP DEFAULT NOW(),
     UNIQUE (service_id, jurisdiction_type, jurisdiction_id, relationship_type, match_method)
 );
+
+
+CREATE TABLE IF NOT EXISTS county_city_relationships (
+    id BIGSERIAL PRIMARY KEY,
+    county_id BIGINT NOT NULL REFERENCES us_counties(ogc_fid),
+    city_id BIGINT NOT NULL REFERENCES us_places(ogc_fid),
+    relationship_type TEXT NOT NULL, -- contains | intersects
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (county_id, city_id)
+);
+
+CREATE TABLE IF NOT EXISTS cog_county_relationships (
+    id BIGSERIAL PRIMARY KEY,
+    cog_id BIGINT NOT NULL REFERENCES us_cogs(ogc_fid),
+    county_id BIGINT NOT NULL REFERENCES us_counties(ogc_fid),
+    relationship_type TEXT NOT NULL, -- contains | intersects
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (cog_id, county_id)
+);

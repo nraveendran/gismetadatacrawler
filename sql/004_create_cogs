@@ -7,6 +7,14 @@ CREATE TABLE texas_cogs (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+ALTER TABLE us_cogs
+ADD COLUMN IF NOT EXISTS website TEXT;
+
+UPDATE us_cogs uc
+SET website = tc.website
+FROM texas_cogs tc
+WHERE lower(trim(uc.cog_abrvn)) = lower(trim(tc.cog_abbreviation));
+
 INSERT INTO texas_cogs
 (cog_name, cog_abbreviation, website, region_number)
 VALUES

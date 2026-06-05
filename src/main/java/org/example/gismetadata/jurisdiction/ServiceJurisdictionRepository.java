@@ -97,13 +97,14 @@ public class ServiceJurisdictionRepository {
                 SELECT DISTINCT
                     s.id,
                     'COG',
-                    c.id,
+                    c.ogc_fid,
                     'mentioned',
-                    'service_text_cog_name_contains',
+                    'service_text_cog_abbreviation_contains',
                     0.85,
                     jsonb_build_object(
-                        'cog_name', c.cog_name,
-                        'cog_abbreviation', c.cog_abbreviation,
+                        'cog_name', c.cog_nm,
+                        'cog_abbreviation', c.cog_abrvn,
+                        'website', c.website,
                         'folder_name', s.folder_name,
                         'service_name', s.service_name,
                         'service_url', s.server_url,
@@ -113,16 +114,16 @@ public class ServiceJurisdictionRepository {
                 CROSS JOIN LATERAL (
                     SELECT lower(regexp_replace(concat_ws(' ', s.folder_name, s.service_name, s.server_url), '[^a-zA-Z0-9]+', '', 'g')) AS normalized_text
                 ) service_text
-                JOIN texas_cogs c
+                JOIN us_cogs c
                     ON service_text.normalized_text LIKE
-                       ('%' || lower(regexp_replace(c.cog_abbreviation, '[^a-zA-Z0-9]+', '', 'g')) || '%')
+                       ('%' || lower(regexp_replace(c.cog_abrvn, '[^a-zA-Z0-9]+', '', 'g')) || '%')
                 WHERE NOT EXISTS (
                     SELECT 1
                     FROM service_jurisdiction_matches existing
                     WHERE existing.service_id = s.id
                 )
-                  AND c.cog_name IS NOT NULL
-                  AND length(trim(c.cog_name)) > 1
+                  AND c.cog_abrvn IS NOT NULL
+                  AND length(trim(c.cog_abrvn)) > 1
                 ON CONFLICT (service_id, jurisdiction_type, jurisdiction_id, relationship_type, match_method)
                 DO UPDATE SET
                     confidence = EXCLUDED.confidence,
